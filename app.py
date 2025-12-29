@@ -77,6 +77,18 @@ st.markdown("""
         background-clip: text;
         margin-bottom: 20px;
     }
+    
+    /* Style radio button labels in dark red */
+    [role="radio"] + label {
+        color: #8B0000 !important;
+        font-weight: 600 !important;
+    }
+    
+    /* Style selected radio button */
+    [role="radio"][aria-checked="true"] + label {
+        color: #DC143C !important;
+        font-weight: 700 !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -160,7 +172,7 @@ def setup_sidebar():
     
     mode = st.sidebar.radio(
         "Mode",
-        ["Landing Page", "Portfolio Analysis", "Single Stock Analysis", "Learn Metrics"],
+        ["Home", "Portfolio Analysis", "Single Stock Analysis", "Learn Metrics"],
         label_visibility="collapsed"
     )
     
@@ -203,7 +215,7 @@ def setup_sidebar():
 # ============================================================================
 
 def show_landing_page():
-    """Professional Landing Page"""
+    """Professional Home Page"""
     
     # Main Header
     st.markdown("""
@@ -989,7 +1001,7 @@ def show_metrics_education():
 def main():
     mode, period, risk_free_rate = setup_sidebar()
     
-    if mode == "Landing Page":
+    if mode == "Home":
         show_landing_page()
     elif mode == "Portfolio Analysis":
         show_portfolio_analysis(period, risk_free_rate)
