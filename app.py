@@ -12,7 +12,12 @@ import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
 import warnings
+import sys
+import os
 warnings.filterwarnings('ignore')
+
+# Add modules to path
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 # Import required packages with error handling
 try:
@@ -295,41 +300,47 @@ def show_portfolio_analysis(period, risk_free_rate):
             st.error(error_b)
             st.stop()
         
-        with st.spinner("Analyzing..."):
+        with st.spinner("Analyzing... (This may take 1-2 minutes)"):
             try:
                 if stocks_a and weights_a:
                     st.markdown("<h2 class='section-header'>Portfolio A</h2>", unsafe_allow_html=True)
-                    data_a = fetcher.fetch_stock_data(stocks_a, period)
-                    analyzer_a = PortfolioAnalyzer(stocks_a, weights_a, data_a)
-                    metrics_a = MetricsCalculator(data_a, analyzer_a, risk_free_rate).calculate_all_metrics()
-                    
-                    display_metrics(metrics_a)
-                    
-                    visualizer = PortfolioVisualizer(data_a, analyzer_a, metrics_a)
-                    col1, col2 = st.columns(2)
-                    with col1:
-                        st.plotly_chart(visualizer.plot_portfolio_value(), use_container_width=True)
-                    with col2:
-                        st.plotly_chart(visualizer.plot_allocation(), use_container_width=True)
-                    
-                    st.success("✅ Analysis complete!")
+                    try:
+                        data_a = fetcher.fetch_stock_data(stocks_a, period)
+                        analyzer_a = PortfolioAnalyzer(stocks_a, weights_a, data_a)
+                        metrics_a = MetricsCalculator(data_a, analyzer_a, risk_free_rate).calculate_all_metrics()
+                        
+                        display_metrics(metrics_a)
+                        
+                        visualizer = PortfolioVisualizer(data_a, analyzer_a, metrics_a)
+                        col1, col2 = st.columns(2)
+                        with col1:
+                            st.plotly_chart(visualizer.plot_portfolio_value(), use_container_width=True)
+                        with col2:
+                            st.plotly_chart(visualizer.plot_allocation(), use_container_width=True)
+                        
+                        st.success("✅ Portfolio A analysis complete!")
+                    except Exception as e:
+                        st.error(f"❌ Error analyzing Portfolio A: {str(e)}")
                 
                 if stocks_b and weights_b:
                     st.markdown("<h2 class='section-header'>Portfolio B</h2>", unsafe_allow_html=True)
-                    data_b = fetcher.fetch_stock_data(stocks_b, period)
-                    analyzer_b = PortfolioAnalyzer(stocks_b, weights_b, data_b)
-                    metrics_b = MetricsCalculator(data_b, analyzer_b, risk_free_rate).calculate_all_metrics()
-                    
-                    display_metrics(metrics_b)
-                    
-                    visualizer = PortfolioVisualizer(data_b, analyzer_b, metrics_b)
-                    col1, col2 = st.columns(2)
-                    with col1:
-                        st.plotly_chart(visualizer.plot_portfolio_value(), use_container_width=True)
-                    with col2:
-                        st.plotly_chart(visualizer.plot_allocation(), use_container_width=True)
-                    
-                    st.success("✅ Analysis complete!")
+                    try:
+                        data_b = fetcher.fetch_stock_data(stocks_b, period)
+                        analyzer_b = PortfolioAnalyzer(stocks_b, weights_b, data_b)
+                        metrics_b = MetricsCalculator(data_b, analyzer_b, risk_free_rate).calculate_all_metrics()
+                        
+                        display_metrics(metrics_b)
+                        
+                        visualizer = PortfolioVisualizer(data_b, analyzer_b, metrics_b)
+                        col1, col2 = st.columns(2)
+                        with col1:
+                            st.plotly_chart(visualizer.plot_portfolio_value(), use_container_width=True)
+                        with col2:
+                            st.plotly_chart(visualizer.plot_allocation(), use_container_width=True)
+                        
+                        st.success("✅ Portfolio B analysis complete!")
+                    except Exception as e:
+                        st.error(f"❌ Error analyzing Portfolio B: {str(e)}")
             
             except Exception as e:
                 st.error(f"Error: {str(e)}")
