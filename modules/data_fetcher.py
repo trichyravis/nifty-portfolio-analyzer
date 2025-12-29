@@ -44,7 +44,7 @@ class NiftyDataFetcher:
     
     def fetch_stock_data(self, stocks, period='1y'):
         """
-        Fetch historical stock data from Yahoo Finance with caching
+        Fetch historical stock data from Yahoo Finance with robust rate limit handling
         
         Args:
             stocks (list): List of stock symbols (without .NS suffix)
@@ -59,19 +59,20 @@ class NiftyDataFetcher:
         stock_symbols = [f"{stock}.NS" if not stock.endswith('.NS') else stock for stock in stocks]
         
         try:
-            # Download with retry logic for rate limiting
-            max_retries = 2
-            retry_count = 0
+            # Retry logic with exponential backoff
+            max_retries = 3
+            base_wait = 10  # Start with 10 seconds
             
-            while retry_count < max_retries:
+            for attempt in range(max_retries):
                 try:
-                    # Download data
+                    # Download data with extended timeout
                     data = yf.download(
                         stock_symbols,
                         period=period,
                         progress=False,
                         interval='1d',
-                        timeout=30
+                        timeout=60,  # 60 second timeout
+                        show_errors=False
                     )
                     
                     # Handle single stock case
@@ -99,19 +100,22 @@ class NiftyDataFetcher:
                     return data
                 
                 except Exception as e:
-                    retry_count += 1
-                    if "rate" in str(e).lower() or "too many" in str(e).lower():
-                        if retry_count < max_retries:
-                            wait_time = 5 * retry_count
-                            print(f"Rate limited. Waiting {wait_time} seconds...")
-                            time.sleep(wait_time)
-                        else:
-                            raise Exception(f"Rate limited after retries for {stocks}")
+                    error_str = str(e).lower()
+                    is_rate_limit = any(keyword in error_str for keyword in 
+                                       ['rate', 'too many', 'throttle', '429', '503', 'timeout'])
+                    
+                    if is_rate_limit and attempt < max_retries - 1:
+                        # Exponential backoff: 10s, 20s, 40s
+                        wait_time = base_wait * (2 ** attempt)
+                        print(f"⏳ Rate limited. Waiting {wait_time} seconds before retry {attempt + 1}/{max_retries - 1}...")
+                        print(f"   Stocks: {', '.join(stock_symbols)}")
+                        time.sleep(wait_time)
+                        continue
                     else:
                         raise Exception(f"Error fetching data for {stocks}: {str(e)}")
         
         except Exception as e:
-            raise Exception(f"Error fetching data for {stocks}: {str(e)}")
+            raise Exception(f"Failed to fetch data for {stocks}: {str(e)}")
     
     def get_benchmark_data(self, period='1y'):
         """
