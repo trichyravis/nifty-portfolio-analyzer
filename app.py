@@ -207,6 +207,9 @@ def show_portfolio_analysis(period, risk_free_rate):
     </div>
     """, unsafe_allow_html=True)
     
+    # Rate limit warning
+    st.warning("⚠️ **Note:** Yahoo Finance rate limits NSE stocks. First analysis may take 2-5 minutes. Subsequent analyses will be faster. Please be patient!")
+    
     try:
         fetcher = NiftyDataFetcher()
         nifty_stocks = fetcher.get_nifty_50_stocks()
@@ -300,7 +303,7 @@ def show_portfolio_analysis(period, risk_free_rate):
             st.error(error_b)
             st.stop()
         
-        with st.spinner("Analyzing... (This may take 1-2 minutes)"):
+        with st.spinner("📊 Analyzing portfolios...\n⏳ If rate limited, will auto-retry with delays\n(This may take 2-5 minutes)"):
             try:
                 if stocks_a and weights_a:
                     st.markdown("<h2 class='section-header'>Portfolio A</h2>", unsafe_allow_html=True)
