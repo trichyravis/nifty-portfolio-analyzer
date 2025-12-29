@@ -44,6 +44,155 @@ except ImportError as e:
     st.stop()
 
 # ============================================================================
+# LINKEDIN INTEGRATION FUNCTIONS
+# ============================================================================
+
+def render_linkedin_footer():
+    """Render professional LinkedIn profile footer for the app"""
+    st.markdown("---")
+    
+    col1, col2, col3 = st.columns([1, 2, 1])
+    
+    with col2:
+        st.markdown('''
+        <style>
+        .linkedin-footer {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.05), rgba(0, 119, 181, 0.05));
+            border-radius: 10px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+        
+        .linkedin-footer h3 {
+            color: white;
+            margin-top: 0;
+            font-size: 16px;
+        }
+        
+        .linkedin-footer p {
+            color: #E0E0E0;
+            margin: 5px 0;
+            font-size: 13px;
+        }
+        
+        .linkedin-footer-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #0077B5 0%, #005885 100%);
+            color: white !important;
+            padding: 10px 25px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+            box-shadow: 0 4px 12px rgba(0, 119, 181, 0.3);
+        }
+        
+        .linkedin-footer-btn:hover {
+            background: linear-gradient(135deg, #005885 0%, #003d5c 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 119, 181, 0.4);
+        }
+        </style>
+        
+        <div class="linkedin-footer">
+            <h3>👨‍🏫 Prof. V. Ravichandran</h3>
+            <p>📊 Financial Risk Management Expert</p>
+            <p>💼 28+ Years Corporate Finance & Banking</p>
+            <p>🎓 10+ Years Academic Excellence</p>
+            <br>
+            <a href="https://www.linkedin.com/in/trichyravis" target="_blank" class="linkedin-footer-btn">
+            🔗 Connect on LinkedIn
+            </a>
+        </div>
+        ''', unsafe_allow_html=True)
+
+
+def render_linkedin_sidebar():
+    """Render LinkedIn profile in sidebar"""
+    st.markdown('''
+    <style>
+    .linkedin-sidebar {
+        background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+        border-radius: 10px;
+        padding: 12px;
+        margin: 10px 0;
+        border-left: 3px solid #FFD700;
+    }
+    
+    .linkedin-sidebar h4 {
+        color: #FFD700;
+        margin: 0 0 8px 0;
+        font-size: 13px;
+        font-weight: 600;
+    }
+    
+    .linkedin-sidebar p {
+        color: #E0E0E0;
+        margin: 4px 0;
+        font-size: 11px;
+        line-height: 1.4;
+    }
+    
+    .linkedin-sidebar-btn {
+        display: block;
+        background: linear-gradient(135deg, #0077B5 0%, #005885 100%);
+        color: white !important;
+        padding: 8px 12px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 11px;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+        margin-top: 8px;
+        text-align: center;
+        width: 100%;
+    }
+    
+    .linkedin-sidebar-btn:hover {
+        background: linear-gradient(135deg, #005885 0%, #003d5c 100%);
+        transform: translateY(-1px);
+    }
+    </style>
+    
+    <div class="linkedin-sidebar">
+        <h4>👨‍🏫 Prof. V. Ravichandran</h4>
+        <p>✓ 28+ Yrs Finance</p>
+        <p>✓ 10+ Yrs Academic</p>
+        <p>✓ Risk Expert</p>
+        <a href="https://www.linkedin.com/in/trichyravis" target="_blank" class="linkedin-sidebar-btn">
+        🔗 LinkedIn
+        </a>
+    </div>
+    ''', unsafe_allow_html=True)
+
+
+def render_linkedin_button_simple():
+    """Simple LinkedIn button - use anywhere in app"""
+    st.markdown('''
+    <a href="https://www.linkedin.com/in/trichyravis" target="_blank" style="
+        display: inline-block;
+        background: linear-gradient(135deg, #0077B5 0%, #005885 100%);
+        color: white !important;
+        padding: 10px 20px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 13px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0, 119, 181, 0.3);
+    " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+    🔗 View LinkedIn Profile
+    </a>
+    ''', unsafe_allow_html=True)
+
+# ============================================================================
 # PAGE CONFIGURATION
 # ============================================================================
 
@@ -139,6 +288,11 @@ def setup_sidebar():
     )
     
     st.sidebar.markdown("---")
+    
+    # LinkedIn Profile
+    render_linkedin_sidebar()
+    
+    st.sidebar.markdown("---")
     st.sidebar.caption("© 2024 Prof. V. Ravichandran")
     
     return mode, period, risk_free_rate / 100
@@ -193,6 +347,9 @@ def show_landing_page():
     28+ Years Corporate Finance & Banking  
     10+ Years Academic Excellence
     """)
+    
+    # LinkedIn Profile
+    render_linkedin_footer()
 
 # ============================================================================
 # PORTFOLIO ANALYSIS
@@ -309,19 +466,34 @@ def show_portfolio_analysis(period, risk_free_rate):
                     st.markdown("<h2 class='section-header'>Portfolio A</h2>", unsafe_allow_html=True)
                     try:
                         data_a = fetcher.fetch_stock_data(stocks_a, period)
-                        analyzer_a = PortfolioAnalyzer(stocks_a, weights_a, data_a)
-                        metrics_a = MetricsCalculator(data_a, analyzer_a, risk_free_rate).calculate_all_metrics()
                         
-                        display_metrics(metrics_a)
-                        
-                        visualizer = PortfolioVisualizer(data_a, analyzer_a, metrics_a)
-                        col1, col2 = st.columns(2)
-                        with col1:
-                            st.plotly_chart(visualizer.plot_portfolio_value(), use_container_width=True)
-                        with col2:
-                            st.plotly_chart(visualizer.plot_allocation(), use_container_width=True)
-                        
-                        st.success("✅ Portfolio A analysis complete!")
+                        # Validate data
+                        if data_a.empty:
+                            st.error(f"❌ No data available for {', '.join(stocks_a)}")
+                        else:
+                            analyzer_a = PortfolioAnalyzer(stocks_a, weights_a, data_a)
+                            metrics_a = MetricsCalculator(data_a, analyzer_a, risk_free_rate).calculate_all_metrics()
+                            
+                            display_metrics(metrics_a)
+                            
+                            # Display charts with better error handling for single stocks
+                            visualizer = PortfolioVisualizer(data_a, analyzer_a, metrics_a)
+                            col1, col2 = st.columns(2)
+                            with col1:
+                                try:
+                                    portfolio_chart = visualizer.plot_portfolio_value()
+                                    st.plotly_chart(portfolio_chart, use_container_width=True)
+                                except Exception as e:
+                                    st.warning(f"⚠️ Portfolio value chart: {str(e)}")
+                            
+                            with col2:
+                                try:
+                                    allocation_chart = visualizer.plot_allocation()
+                                    st.plotly_chart(allocation_chart, use_container_width=True)
+                                except Exception as e:
+                                    st.warning(f"⚠️ Allocation chart: {str(e)}")
+                            
+                            st.success("✅ Portfolio A analysis complete!")
                     except Exception as e:
                         st.error(f"❌ Error analyzing Portfolio A: {str(e)}")
                 
@@ -329,19 +501,34 @@ def show_portfolio_analysis(period, risk_free_rate):
                     st.markdown("<h2 class='section-header'>Portfolio B</h2>", unsafe_allow_html=True)
                     try:
                         data_b = fetcher.fetch_stock_data(stocks_b, period)
-                        analyzer_b = PortfolioAnalyzer(stocks_b, weights_b, data_b)
-                        metrics_b = MetricsCalculator(data_b, analyzer_b, risk_free_rate).calculate_all_metrics()
                         
-                        display_metrics(metrics_b)
-                        
-                        visualizer = PortfolioVisualizer(data_b, analyzer_b, metrics_b)
-                        col1, col2 = st.columns(2)
-                        with col1:
-                            st.plotly_chart(visualizer.plot_portfolio_value(), use_container_width=True)
-                        with col2:
-                            st.plotly_chart(visualizer.plot_allocation(), use_container_width=True)
-                        
-                        st.success("✅ Portfolio B analysis complete!")
+                        # Validate data
+                        if data_b.empty:
+                            st.error(f"❌ No data available for {', '.join(stocks_b)}")
+                        else:
+                            analyzer_b = PortfolioAnalyzer(stocks_b, weights_b, data_b)
+                            metrics_b = MetricsCalculator(data_b, analyzer_b, risk_free_rate).calculate_all_metrics()
+                            
+                            display_metrics(metrics_b)
+                            
+                            # Display charts with better error handling for single stocks
+                            visualizer = PortfolioVisualizer(data_b, analyzer_b, metrics_b)
+                            col1, col2 = st.columns(2)
+                            with col1:
+                                try:
+                                    portfolio_chart = visualizer.plot_portfolio_value()
+                                    st.plotly_chart(portfolio_chart, use_container_width=True)
+                                except Exception as e:
+                                    st.warning(f"⚠️ Portfolio value chart: {str(e)}")
+                            
+                            with col2:
+                                try:
+                                    allocation_chart = visualizer.plot_allocation()
+                                    st.plotly_chart(allocation_chart, use_container_width=True)
+                                except Exception as e:
+                                    st.warning(f"⚠️ Allocation chart: {str(e)}")
+                            
+                            st.success("✅ Portfolio B analysis complete!")
                     except Exception as e:
                         st.error(f"❌ Error analyzing Portfolio B: {str(e)}")
             
