@@ -78,16 +78,58 @@ st.markdown("""
         margin-bottom: 20px;
     }
     
-    /* Style radio button labels in dark red */
-    [role="radio"] + label {
+    /* Comprehensive radio button styling */
+    /* Target all text in Streamlit radio */
+    [role="radiogroup"] {
         color: #8B0000 !important;
-        font-weight: 600 !important;
     }
     
-    /* Style selected radio button */
-    [role="radio"][aria-checked="true"] + label {
-        color: #DC143C !important;
+    [role="radiogroup"] label {
+        color: #8B0000 !important;
         font-weight: 700 !important;
+    }
+    
+    [role="radiogroup"] p,
+    [role="radiogroup"] span {
+        color: #8B0000 !important;
+        font-weight: 700 !important;
+    }
+    
+    /* Sidebar specific styling */
+    .stSidebar [role="radiogroup"] label,
+    .stSidebar [role="radiogroup"] span,
+    .stSidebar [role="radiogroup"] p {
+        color: #8B0000 !important;
+        font-weight: 700 !important;
+        font-size: 16px !important;
+    }
+    
+    /* Target the entire radio group */
+    .stRadio {
+        color: #8B0000 !important;
+    }
+    
+    .stRadio label span,
+    .stRadio label p {
+        color: #8B0000 !important;
+        font-weight: 700 !important;
+    }
+    
+    /* Force dark red on all text inside radio */
+    [role="radiogroup"] {
+        --text-color: #8B0000;
+    }
+    
+    [role="radiogroup"] * {
+        color: #8B0000 !important;
+        font-weight: 700 !important;
+    }
+    
+    /* Style the buttons in sidebar */
+    .stSidebar button {
+        color: #8B0000 !important;
+        font-weight: 700 !important;
+        width: 100% !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -170,11 +212,50 @@ def setup_sidebar():
     # Mode Selection Section
     st.sidebar.markdown("<h4 style='color: white; background: #003366; padding: 10px; margin: 0 -16px 10px -16px; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;'>Select Mode:</h4>", unsafe_allow_html=True)
     
-    mode = st.sidebar.radio(
-        "Mode",
-        ["Home", "Portfolio Analysis", "Single Stock Analysis", "Learn Metrics"],
-        label_visibility="collapsed"
-    )
+    # Add CSS for styled mode buttons
+    st.sidebar.markdown("""
+    <style>
+        .mode-button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin: 15px 0;
+        }
+    </style>
+    """, unsafe_allow_html=True)
+    
+    # Create custom mode buttons with session state
+    if 'app_mode' not in st.session_state:
+        st.session_state.app_mode = "Home"
+    
+    modes = ["Home", "Portfolio Analysis", "Single Stock Analysis", "Learn Metrics"]
+    cols = st.sidebar.columns(1)
+    
+    with st.sidebar:
+        st.markdown("""
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+        """, unsafe_allow_html=True)
+        
+        for mode_option in modes:
+            is_active = st.session_state.app_mode == mode_option
+            button_color = "#8B0000" if is_active else "#E0E0E0"
+            bg_color = "#8B0000" if is_active else "white"
+            text_color = "white" if is_active else "#8B0000"
+            border_color = "#8B0000"
+            
+            if st.button(
+                f"🔴 {mode_option}" if is_active else f"○ {mode_option}",
+                use_container_width=True,
+                key=f"mode_btn_{mode_option}",
+                help=f"Switch to {mode_option}"
+            ):
+                st.session_state.app_mode = mode_option
+                st.rerun()
+        
+        st.markdown("</div>", unsafe_allow_html=True)
+    
+    # Use the session state mode
+    mode = st.session_state.app_mode
     
     # Settings Section
     st.sidebar.markdown("<h4 style='color: white; background: #003366; padding: 10px; margin: 10px -16px 10px -16px; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;'>Settings:</h4>", unsafe_allow_html=True)
