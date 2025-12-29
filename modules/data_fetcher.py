@@ -67,16 +67,25 @@ class NiftyDataFetcher:
             
             # Handle single stock case
             if len(stock_symbols) == 1:
-                data = data.rename(columns={'Close': stocks[0]})
-                data = pd.DataFrame({stocks[0]: data[stocks[0]]})
+                # For single stock, yfinance returns a Series for 'Close'
+                if isinstance(data, pd.DataFrame):
+                    close_data = data['Close']
+                else:
+                    close_data = data
+                
+                # Create DataFrame with stock name
+                data = pd.DataFrame({stocks[0]: close_data})
             else:
-                # Extract closing prices
+                # Extract closing prices for multiple stocks
                 data = data['Close']
                 # Rename columns to remove .NS suffix
                 data.columns = stocks
             
             # Drop NaN values
             data = data.dropna()
+            
+            if data.empty:
+                raise Exception(f"No valid data retrieved for {stocks}")
             
             return data
         
