@@ -17,16 +17,16 @@ class NiftyDataFetcher:
     
     # OFFICIAL Nifty 50 stocks - NSE verified tickers
     NIFTY_50 = [
-        'RELIANCE.NS', 'TCS.NS', 'HDFCBANK.NS', 'INFOSYS.NS', 'ICICIBANK.NS',
+        'RELIANCE.NS', 'TCS.NS', 'HDFCBANK.NS', 'HEROMOTOCO.NS', 'ICICIBANK.NS',
         'HINDUNILVR.NS', 'SBIN.NS', 'BHARTIARTL.NS', 'ITC.NS', 'LT.NS',
         'BAJAJFINSV.NS', 'AXISBANK.NS', 'MARUTI.NS', 'SUNPHARMA.NS', 'TECHM.NS',
         'WIPRO.NS', 'POWERGRID.NS', 'TITAN.NS', 'BAJAJ-AUTO.NS', 'M&M.NS',
         'GAIL.NS', 'ONGC.NS', 'EICHERMOT.NS', 'ULTRACEMCO.NS', 'ADANIPORTS.NS',
-        'ASIANPAINT.NS', 'DMART.NS', 'HEROMOTOCO.NS', 'JSWSTEEL.NS', 'KOTAKBANK.NS',
+        'ASIANPAINT.NS', 'DMART.NS', 'JSWSTEEL.NS', 'KOTAKBANK.NS',
         'NTPC.NS', 'HCLTECH.NS', 'DRREDDY.NS', 'INDIGO.NS', 'BPCL.NS',
         'CIPLA.NS', 'COALINDIA.NS', 'DIVISLAB.NS', 'GODREJCP.NS', 'INDUSTOWER.NS',
         'NATIONALUM.NS', 'NESTLEIND.NS', 'TATASTEEL.NS', 'TATAMOTORS.NS', 'UPL.NS',
-        'APOLLOHOSP.NS', 'BIOCON.NS'
+        'APOLLOHOSP.NS', 'BIOCON.NS', 'INFY.NS'
     ]
     
     def __init__(self):
@@ -74,21 +74,35 @@ class NiftyDataFetcher:
                         timeout=60
                     )
                     
-                    # Handle single stock case
+                    # Handle single stock case - ensure it's a DataFrame with proper index
                     if len(stock_symbols) == 1:
-                        # For single stock, yfinance returns a Series for 'Close'
-                        if isinstance(data, pd.DataFrame):
-                            close_data = data['Close']
+                        # yfinance returns different structures for single vs multiple stocks
+                        if isinstance(data, pd.DataFrame) and 'Close' in data.columns:
+                            # If it's already a DataFrame with Close column
+                            close_data = data[['Close']].copy()
+                            close_data.columns = [stocks[0]]
+                        elif isinstance(data, pd.Series):
+                            # If it's a Series (single column)
+                            close_data = pd.DataFrame({stocks[0]: data}, index=data.index)
+                        elif isinstance(data, pd.DataFrame):
+                            # If it's a DataFrame without explicit Close column
+                            close_data = pd.DataFrame({stocks[0]: data.iloc[:, 0]}, index=data.index)
                         else:
-                            close_data = data
+                            raise Exception(f"Unexpected data structure for {stocks[0]}")
                         
-                        # Create DataFrame with stock name
-                        data = pd.DataFrame({stocks[0]: close_data})
+                        data = close_data
                     else:
-                        # Extract closing prices for multiple stocks
-                        data = data['Close']
-                        # Rename columns to remove .NS suffix
-                        data.columns = stocks
+                        # Multiple stocks - extract Close prices
+                        if 'Close' in data.columns:
+                            data = data[['Close']].copy()
+                            data.columns = stocks
+                        else:
+                            # Fallback: assume first columns are Close
+                            data = data.iloc[:, :len(stocks)].copy()
+                            data.columns = stocks
+                    
+                    # Ensure index is DatetimeIndex
+                    data.index = pd.to_datetime(data.index)
                     
                     # Drop NaN values
                     data = data.dropna()
