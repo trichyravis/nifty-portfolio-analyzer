@@ -279,7 +279,7 @@ def show_portfolio_analysis(period, risk_free_rate):
         col1, col2 = st.columns(2)
         
         with col1:
-            st.markdown("<h3 class='section-header'>Portfolio A</h3>", unsafe_allow_html=True)
+            st.markdown("<h3 class='section-header' style='color: #8B0000;'>Portfolio A</h3>", unsafe_allow_html=True)
             stocks_a = st.multiselect(
                 "Select stocks for Portfolio A",
                 options=nifty_stocks,
@@ -325,7 +325,7 @@ def show_portfolio_analysis(period, risk_free_rate):
                         )
         
         with col2:
-            st.markdown("<h3 class='section-header'>Portfolio B</h3>", unsafe_allow_html=True)
+            st.markdown("<h3 class='section-header' style='color: #8B0000;'>Portfolio B</h3>", unsafe_allow_html=True)
             stocks_b = st.multiselect(
                 "Select stocks for Portfolio B",
                 options=nifty_stocks,
@@ -416,7 +416,7 @@ def show_portfolio_analysis(period, risk_free_rate):
             with st.spinner("📊 Analyzing portfolios...\n⏳ If rate limited, will auto-retry\n(This may take 2-5 minutes)"):
                 try:
                     if stocks_a and weights_a:
-                        st.markdown("<h2 class='section-header'>Portfolio A</h2>", unsafe_allow_html=True)
+                        st.markdown("<h2 class='section-header' style='color: #8B0000;'>Portfolio A</h2>", unsafe_allow_html=True)
                         try:
                             data_a = fetcher.fetch_stock_data(stocks_a, period)
                             
@@ -447,7 +447,7 @@ def show_portfolio_analysis(period, risk_free_rate):
                             st.error(f"❌ Error: {str(e)}")
                     
                     if stocks_b and weights_b:
-                        st.markdown("<h2 class='section-header'>Portfolio B</h2>", unsafe_allow_html=True)
+                        st.markdown("<h2 class='section-header' style='color: #8B0000;'>Portfolio B</h2>", unsafe_allow_html=True)
                         try:
                             data_b = fetcher.fetch_stock_data(stocks_b, period)
                             
@@ -481,7 +481,7 @@ def show_portfolio_analysis(period, risk_free_rate):
                     if stocks_a and weights_a and stocks_b and weights_b:
                         try:
                             st.markdown("---")
-                            st.markdown("<h2 class='section-header'>📊 Portfolio Comparison Analysis</h2>", unsafe_allow_html=True)
+                            st.markdown("<h2 class='section-header' style='color: #8B0000;'>📊 Portfolio Comparison Analysis</h2>", unsafe_allow_html=True)
                             
                             # Create comparison dataframe
                             comparison_data = {
