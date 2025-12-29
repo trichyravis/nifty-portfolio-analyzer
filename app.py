@@ -87,56 +87,48 @@ st.markdown("""
 def render_professional_footer():
     """Render professional footer with disclaimer and buttons"""
     st.markdown("---")
-    st.markdown("""
-    <div style="text-align: center; padding: 40px 20px; background: #f8f9fa; border-radius: 10px; margin-top: 30px;">
-        
-        <h3 style="color: #003366; margin: 0 0 15px 0; font-size: 18px; font-weight: 700; letter-spacing: 1px;">
-        THE MOUNTAIN PATH - WORLD OF FINANCE
-        </h3>
-        
-        <p style="color: #555; margin: 0 0 15px 0; font-size: 14px;">
-        Advanced Portfolio Analysis Platform with Financial Metrics
-        </p>
-        
-        <p style="color: #003366; font-weight: 600; margin: 0 0 20px 0;">
-        Prof. V. Ravichandran | 28+ Years Finance Experience
-        </p>
-        
-        <div style="display: flex; justify-content: center; gap: 12px; margin-bottom: 25px;">
-            <a href="https://www.linkedin.com/in/trichyravis" target="_blank" style="
-                background: linear-gradient(135deg, #0077B5 0%, #005885 100%);
-                color: white !important;
-                padding: 12px 24px;
-                border-radius: 6px;
-                text-decoration: none;
-                font-weight: 600;
-                font-size: 13px;
-                box-shadow: 0 2px 8px rgba(0, 119, 181, 0.3);
-            ">🔗 LinkedIn Profile</a>
-            
-            <a href="https://github.com/trichyravis/nifty-portfolio-analyzer" target="_blank" style="
-                background: #333;
-                color: white !important;
-                padding: 12px 24px;
-                border-radius: 6px;
-                text-decoration: none;
-                font-weight: 600;
-                font-size: 13px;
-                box-shadow: 0 2px 8px rgba(51, 51, 51, 0.3);
-            ">🐙 GitHub</a>
-        </div>
-        
-        <p style="color: #666; font-size: 12px; margin: 0 0 10px 0; line-height: 1.6;">
-        <strong>Disclaimer:</strong> This tool is for educational purposes. Not financial advice. 
-        Always consult with a qualified financial advisor before making investment decisions.
-        </p>
-        
-        <p style="color: #999; font-size: 11px; margin: 0;">
-        📊 Last Updated: {last_updated}
-        </p>
-        
+    st.markdown(f"""
+    <div style="text-align: center; padding: 30px 20px;">
+    <h3 style="color: #003366; margin: 0 0 15px 0; font-size: 18px; font-weight: 700; letter-spacing: 1px;">
+    THE MOUNTAIN PATH - WORLD OF FINANCE
+    </h3>
+    <p style="color: #555; margin: 0 0 15px 0; font-size: 14px;">
+    Advanced Portfolio Analysis Platform with Financial Metrics
+    </p>
+    <p style="color: #003366; font-weight: 600; margin: 0 0 20px 0;">
+    Prof. V. Ravichandran | 28+ Years Finance Experience
+    </p>
+    <div style="display: flex; justify-content: center; gap: 12px; margin-bottom: 25px;">
+        <a href="https://www.linkedin.com/in/trichyravis" target="_blank" style="
+            background: linear-gradient(135deg, #0077B5 0%, #005885 100%);
+            color: white !important;
+            padding: 12px 24px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 13px;
+            box-shadow: 0 2px 8px rgba(0, 119, 181, 0.3);
+        ">🔗 LinkedIn Profile</a>
+        <a href="https://github.com/trichyravis/nifty-portfolio-analyzer" target="_blank" style="
+            background: #333;
+            color: white !important;
+            padding: 12px 24px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 13px;
+            box-shadow: 0 2px 8px rgba(51, 51, 51, 0.3);
+        ">🐙 GitHub</a>
     </div>
-    """.format(last_updated=datetime.now().strftime("%Y-%m-%d %H:%M:%S")), unsafe_allow_html=True)
+    <p style="color: #666; font-size: 12px; margin: 0 0 10px 0; line-height: 1.6;">
+    <strong>Disclaimer:</strong> This tool is for educational purposes. Not financial advice. 
+    Always consult with a qualified financial advisor before making investment decisions.
+    </p>
+    <p style="color: #999; font-size: 11px; margin: 0;">
+    📊 Last Updated: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
+    </p>
+    </div>
+    """, unsafe_allow_html=True)
 
 # ============================================================================
 # SIDEBAR SETUP
