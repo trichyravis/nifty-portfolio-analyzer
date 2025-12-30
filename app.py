@@ -605,6 +605,8 @@ def show_portfolio_analysis(period, risk_free_rate):
         
         st.markdown("---")
         
+        st.caption("💡 **Tip:** If there are any data issues, Reclick 'Analyze Portfolios' to retry. This usually resolves Yahoo Finance temporary disruptions immediately!")
+        
         if st.button("🔍 Analyze Portfolios", use_container_width=True, key="analyze_portfolios"):
             valid_a, error_a = validate_weights(weights_a, "Portfolio A")
             valid_b, error_b = validate_weights(weights_b, "Portfolio B")
